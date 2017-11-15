@@ -18,11 +18,18 @@ class LinodeClient
   call: (action, args, callback) ->
     uri = "#{@base_uri}&api_action=#{action}&#{qs.stringify args}"
     request {uri}, (err, res, body) ->
-      obj = JSON.parse body
+      try
+        obj = JSON.parse body
+      catch e
+        return callback "Linode returned an invalid JSON", undefined
+      
       if obj.ERRORARRAY && obj.ERRORARRAY.length > 0
         callback obj.ERRORARRAY[0].ERRORMESSAGE, undefined
       else
-        callback undefined, obj.DATA?obj.DATA:obj
+        if obj.DATA
+          callback undefined, obj.DATA
+        else
+          callback undefined, obj
 
 exports.LinodeClient = LinodeClient
 

@@ -11,7 +11,7 @@ get_api_groups = ->
   groups = {}
   uri = 'http://www.linode.com/api/'
   console.log "GET #{uri}"
-  request {uri}, (_, _, body) ->
+  request {uri}, (_, _2, body) ->
     while match = api_hrefs.exec body
       path = match[1]
       name = path.replace /\/api\/(.+)/, '$1'
@@ -23,7 +23,7 @@ get_api_groups = ->
 get_methods_for_group = (name, uri) ->
   methods = {}
   console.log "GET #{uri}"
-  request {uri}, (_, _, body) ->
+  request {uri}, (_, _2, body) ->
     while match = api_hrefs.exec body
       path = match[1]
       uri  = "http://linode.com#{path}"
@@ -39,7 +39,7 @@ get_parameters_for_method = (name, uri) ->
   props = /<span class="propName">([^<]+)<\/span>.+?\((required|optional)\)/g
   ++reqs
   console.log "GET #{uri}"
-  request {uri}, (_, _, body) ->
+  request {uri}, (_, _2, body) ->
     reqs--
     body = body.replace /\n/g, ''
     while match = props.exec body
